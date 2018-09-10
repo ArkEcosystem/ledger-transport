@@ -1,6 +1,6 @@
 {
-  "name": "@arkecosystem/ark-ledger-transport",
-  "version": "1.0.0",
+  "name": "@arkecosystem/ledger-transport",
+  "version": "0.1.0",
   "description": "Ledger Hardware Wallet Ark Application API",
   "keywords": [
     "Ledger",
@@ -8,7 +8,6 @@
     "Ark Ecosystem",
     "ark",
     "NanoS",
-    "Blue",
     "Hardware Wallet"
   ],
   "repository": {
