@@ -44,10 +44,8 @@ export default class Ark {
   }
 
   /**
-   * get Ethereum address for a given BIP 32 path.
+   * get Ark address for a given BIP 32 path.
    * @param path a path in BIP 32 format
-   * @option boolDisplay optionally enable or not the display
-   * @option boolChaincode optionally enable or not the chaincode request
    * @return an object with a publicKey, address and (optionally) chainCode
    * @example
    * ark.getAddress("44'/111'/0'/0/0").then(o => o.address)
