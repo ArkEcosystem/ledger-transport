@@ -51,7 +51,8 @@ export default class Ark {
    * ark.getAddress("44'/111'/0'/0/0").then(o => o.address)
    */
   getAddress(
-    path: string
+    path: string,
+    display?: boolean
   ): Promise<{
     publicKey: string,
     address: string
@@ -66,7 +67,7 @@ export default class Ark {
       .send(
         0xe0,
         0x02,
-        0x00,
+        display ? 0x01 : 0x00,
         0x40,
         buffer
       )
