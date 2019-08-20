@@ -1,9 +1,13 @@
 # Ledger Transport
 
-Lead Maintainer: [Alex Barnsley](https://github.com/alexbarnsley)
+[![License: MIT](https://badgen.now.sh/badge/license/MIT/green)](https://opensource.org/licenses/MIT)
+
+> Lead Maintainer: [Alex Barnsley](https://github.com/alexbarnsley)
+
+## Build
 
 ```
-npm install && npm run build
+yarn && yarn build
 ```
 
 ## Security
