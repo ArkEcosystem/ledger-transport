@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": [
@@ -12,11 +12,11 @@
         "forceAllTransforms": true
       }
     ],
-    "flow",
-    "react",
-    "stage-0"
+    "@babel/preset-flow",
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-runtime"
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-function-bind"
   ]
 }
