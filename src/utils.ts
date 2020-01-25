@@ -19,14 +19,11 @@ export function splitPath (path: string): number[] {
 }
 
 export function writePathsToBuffer (paths: number[], buffer: Buffer): void {
-	// buffer.write(paths.length);
 	buffer[0] = paths.length;
+
 	for (const index in paths) {
-		// buffer.writeUInt32BE(paths[index]);
 		buffer.writeUInt32BE(paths[index], 1 + (4 * parseInt(index, 10)));
 	}
-
-	// return buffer;
 }
 
 export function splitToChunks (string: Buffer, chunkSize: number): Buffer[] {
