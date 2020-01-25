@@ -1,0 +1,37 @@
+{
+  "name": "@arkecosystem/ledger-transport",
+  "version": "1.0.0",
+  "description": "Ledger Hardware Wallet ARK Application API",
+  "keywords": [
+    "Ledger",
+    "LedgerWallet",
+    "Ark Ecosystem",
+    "ark",
+    "NanoS",
+    "NanoX",
+    "Hardware Wallet"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arkecosystem/ledger-transport"
+  },
+  "bugs": {
+    "url": "https://github.com/arkecosystem/ledger-transport/issues"
+  },
+  "homepage": "https://github.com/arkecosystem/ledger-transport",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/",
+  "author": "Alex Barnsley <alex@ark.io>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@ledgerhq/hw-transport": "^5.7.0",
+    "@types/node": "^13.5.0",
+    "typescript": "^3.7.5"
+  }
+}
