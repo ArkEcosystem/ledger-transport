@@ -4,8 +4,9 @@ import { splitPath, splitToChunks, writePathsToBuffer } from "./utils";
 
 export default class ARK implements Transport {
 	readonly IDENTIFIER = 0xe0;
-	readonly INS_GET_PUBLIC_KEY = 0x02;
-	readonly INS_SIGN_TRANSACTION = 0x04;
+	readonly OP_GET_PUBLIC_KEY = 0x02;
+	readonly OP_SIGN_TRANSACTION = 0x04;
+	readonly OP_SIGN_MESSAGE = 0x08;
 	readonly ALG_SECP256K1 = 0x40;
 	readonly CHUNK_SIZE = 255;
 	readonly PAYLOAD_MAX = 255 * 4;
@@ -28,7 +29,7 @@ export default class ARK implements Transport {
 
 		const response = await this.transport.send(
 			this.IDENTIFIER,
-			this.INS_GET_PUBLIC_KEY,
+			this.OP_GET_PUBLIC_KEY,
 			0x00,
 			this.ALG_SECP256K1,
 			buffer
@@ -38,6 +39,14 @@ export default class ARK implements Transport {
 	}
 
 	public async signTransaction(path: string, hex: Buffer): Promise<string> {
+		return this.sign(path, hex, this.OP_SIGN_TRANSACTION);
+	}
+
+	public async signMessage(path: string, hex: Buffer): Promise<string> {
+		return this.sign(path, hex, this.OP_SIGN_MESSAGE);
+	}
+
+	private async sign(path: string, hex: Buffer, operation: number): Promise<string> {
 		if (hex.length > this.PAYLOAD_MAX) {
 			throw new Error("Payload is too large");
 		}
@@ -70,7 +79,7 @@ export default class ARK implements Transport {
 
 			console.log([
 				'0x'+this.IDENTIFIER.toString(16),
-				'0x'+this.INS_SIGN_TRANSACTION.toString(16),
+				'0x'+operation.toString(16),
 				'0x'+chunkPart.toString(16),
 				'0x'+this.ALG_SECP256K1.toString(16),
 				data.toString("hex"),
@@ -80,7 +89,7 @@ export default class ARK implements Transport {
 			try {
 				promises.push(this.transport.send(
 					this.IDENTIFIER,
-					this.INS_SIGN_TRANSACTION,
+					operation,
 					chunkPart,
 					this.ALG_SECP256K1,
 					data
