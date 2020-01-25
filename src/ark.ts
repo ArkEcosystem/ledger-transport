@@ -6,6 +6,7 @@ export default class ARK implements Transport {
 	readonly IDENTIFIER = 0xe0;
 	readonly OP_GET_PUBLIC_KEY = 0x02;
 	readonly OP_SIGN_TRANSACTION = 0x04;
+	readonly OP_GET_VERSION = 0x06;
 	readonly OP_SIGN_MESSAGE = 0x08;
 	readonly ALG_SECP256K1 = 0x40;
 	readonly CHUNK_SIZE = 255;
@@ -20,6 +21,17 @@ export default class ARK implements Transport {
 			"signTransaction",
 			"getAppConfiguration"
 		], "w0w");
+	}
+
+	public async getVersion (): Promise<string> {
+		const response = await this.transport.send(
+			this.IDENTIFIER,
+			this.OP_GET_VERSION,
+			0x00,
+			0x00
+		);
+
+		return `${response[1]}.${response[2]}.${response[3]}`;
 	}
 
 	public async getPublicKey(path: string): Promise<string> {
