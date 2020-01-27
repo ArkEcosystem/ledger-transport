@@ -1,7 +1,7 @@
 {
   "name": "@arkecosystem/ledger-transport",
   "version": "1.0.0",
-  "description": "Ledger Hardware Wallet ARK Application API",
+  "description": "ARK Transport layer for the Ledger Hardware Wallet",
   "keywords": [
     "Ledger",
     "LedgerWallet",
@@ -24,7 +24,7 @@
   },
   "main": "dist/",
   "author": "Alex Barnsley <alex@ark.io>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w"
