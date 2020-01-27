@@ -64,9 +64,8 @@ export default class ARK implements Transport {
 		}
 
 		const paths = splitPath(path);
-		const hexChunks = splitToChunks(hex, this.PAYLOAD_MAX - paths.length);
+		const hexChunks = splitToChunks(hex, (this.CHUNK_SIZE * 2) - ((2 + (paths.length * 4)) * 2));
 		const toSend = [];
-
 		for (const index in hexChunks) {
 			const chunk = hexChunks[index];
 			const buffer = Buffer.alloc(index === "0" ? 1 + (paths.length * 4) : 0);
@@ -86,16 +85,22 @@ export default class ARK implements Transport {
 			if (toSend.length === 1 && index === "0") {
 				chunkPart = 0x80;
 			} else if (toSend.length > 1 && index === (toSend.length - 1).toString()) {
-				chunkPart = 0x80;
+				chunkPart = 0x81;
 			}
 
-			promises.push(this.transport.send(
-				this.IDENTIFIER,
-				operation,
-				chunkPart,
-				this.ALG_SECP256K1,
-				data
-			));
+			try {
+				const promise = await this.transport.send(
+					this.IDENTIFIER,
+					operation,
+					chunkPart,
+					this.ALG_SECP256K1,
+					data
+				);
+
+				promises.push(promise);
+			} catch (error) {
+				throw new Error(`Could not sign transaction: ${error.message}`);
+			}
 		}
 
 		const response = await Promise.all(promises);
