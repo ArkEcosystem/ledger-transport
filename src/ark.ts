@@ -103,6 +103,6 @@ export default class ARK implements Transport {
 			throw new Error("No response");
 		}
 
-		return response.map(r => r.toString('hex')).join("");
+		return response.map(r => r.slice(0, r.length - 2).toString('hex')).join("");
 	}
 }
