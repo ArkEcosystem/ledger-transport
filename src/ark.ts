@@ -88,19 +88,13 @@ export default class ARK implements Transport {
 				chunkPart = 0x81;
 			}
 
-			try {
-				const promise = await this.transport.send(
-					this.IDENTIFIER,
-					operation,
-					chunkPart,
-					this.ALG_SECP256K1,
-					data
-				);
-
-				promises.push(promise);
-			} catch (error) {
-				throw new Error(`Could not sign transaction: ${error.message}`);
-			}
+			promises.push(await this.transport.send(
+				this.IDENTIFIER,
+				operation,
+				chunkPart,
+				this.ALG_SECP256K1,
+				data
+			));
 		}
 
 		const response = await Promise.all(promises);
