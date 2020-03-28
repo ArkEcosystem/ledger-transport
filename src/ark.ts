@@ -148,7 +148,7 @@ export default class ARK implements Transport {
 	 * @returns {Promise<string>} payload signature
 	 */
 	public async signTransaction(path: string, hex: Buffer): Promise<string> {
-		return this.sign(path, ApduFlags.INS_SIGN_TRANSACTION, hex);
+		return this.sign(path, hex, ApduFlags.INS_SIGN_TRANSACTION);
 	}
 
 	/**
@@ -159,22 +159,22 @@ export default class ARK implements Transport {
 	 * @returns {Promise<string>} payload signature
 	 */
 	public async signMessage(path: string, hex: Buffer): Promise<string> {
-		return this.sign(path, ApduFlags.INS_SIGN_MESSAGE, hex);
+		return this.sign(path, hex, ApduFlags.INS_SIGN_MESSAGE);
 	}
 
 	/**
 	 * Sign using a Ledger Device.
 	 *
 	 * @param {string} path Bip32 Path string
-	 * @param {number} instruction type of operation (e.g. Transaction, Message, etc.)
 	 * @param {Buffer} hex transaction payload hex
+	 * @param {number} instruction type of operation (e.g. Transaction, Message, etc.)
 	 * @returns {Promise<string>} payload signature
 	 * @throws {Error} if the buffer length is 0 or greater than PAYLOAD_MAX
 	 */
 	private async sign(
 		path: string,
-		instruction: number,
-		hex: Buffer
+		hex: Buffer,
+		instruction: number
 	): Promise<string> {
 		if (hex.length === 0 || hex.length > this.PAYLOAD_MAX) {
 			throw new Error("Invalid Payload Size");
