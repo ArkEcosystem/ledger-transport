@@ -8,40 +8,40 @@ import {
 	
 /**
  * APDU Header Flags
- * 
+ *
  * Describes the APDU Class, Instruction-Type, Parameter 1, and Parameter 2.
- * 
+ *
  * APDU Header:  ({ CLA + INS + P1 + P2 })
  * - CLA:  Apdu Class
  * - INS:  Instruction Type
  * - P1:   Instruction Parameter 1
  * - P2:   Instruction Parameter 2
- * 
+ *
  * Instruction Types:
  * - INS_GET_PUBLIC_KEY:    Get a PublicKey from a Ledger Device
  * - INS_GET_VERSION:       Get the ARK Application Version from a Ledger Device
  * - INS_SIGN_TRANSACTION:  Sign a Transaction using a Ledger Device
  * - INS_SIGN_MESSAGE:      Sign a Message using a Ledger Device
- * 
+ *
  * App / PublicKey Context:
  * P1: User Approval
  * - P1_NON_CONFIRM:  Do NOT request user approval
  * - P1_CONFIRM:      Request user approval
- * 
+ *
  * P2: ChainCode
  * - P2_NO_CHAINCODE:  Don't use a ChainCode
  * - P2_CHAINCODE:     Use a Chaincode
- * 
+ *
  * Signing Context:
  * P1: Payload Segment
  * - P1_SINGLE:  N(1) where N === 1
  * - P1_FIRST:   N(1) where N > 1
  * - P1_MORE:    N(2)..N-1 where N > 2
  * - P1_LAST:    Nth where N > 1
- * 
+ *
  * P2:
  * - P2_ECDSA: Use Ecdsa Signatures
- * 
+ *
  */
 enum ApduFlags {
 	/** APDU Class */
@@ -73,7 +73,7 @@ enum ApduFlags {
  * ARK Ledger Transport Class.
  *
  * Send APDU Instruction Payloads to a Ledger Device.
- * 
+ *
  * - INS_GET_PUBLIC_KEY
  * - INS_GET_VERSION
  * - INS_SIGN_TRANSACTION
@@ -82,8 +82,9 @@ enum ApduFlags {
 export default class ARK implements Transport {
 	private transport: LedgerTransport<any>;
 
+	readonly CHUNK_MAX: number = 10;
 	readonly CHUNK_SIZE: number = 255;
-	readonly PAYLOAD_MAX: number = this.CHUNK_SIZE * 10;
+	readonly PAYLOAD_MAX: number = this.CHUNK_MAX * this.CHUNK_SIZE;
 
 	/**
 	 * ARK Ledger Transport Class Ctor.
@@ -189,18 +190,17 @@ export default class ARK implements Transport {
 			this.CHUNK_SIZE * 2 - (2 + bip32Path.length * 4) * 2
 		);
 
-		for (const index in chunks) {
-			const chunk = chunks[index];
+		chunks.forEach(function (chunk, index) {
 			const buffer = Buffer.alloc(
-				index === "0" ? 1 + bip32Path.length * 4 : 0
+				index.toString() === "0" ? 1 + bip32Path.length * 4 : 0
 			);
 
-			if (index === "0") {
+			if (index.toString() === "0") {
 				writeBip32ElementsToBuffer(bip32Path, buffer);
 			}
 
 			toSend.push(Buffer.concat([buffer, chunk]));
-		}
+		});
 
 		const promises = [];
 
