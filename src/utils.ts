@@ -47,7 +47,7 @@ export function writeBip32ElementsToBuffer(
 	buffer[0] = elements.length;
 
 	elements.forEach(function (element, index) {
-		buffer.writeUInt32BE(element, 1 + 4 * parseInt(index.toString(), 10));
+		buffer.writeUInt32BE(element, 1 + 4 * index);
 	});
 }
 
@@ -70,6 +70,6 @@ export function splitApduChunks(string: Buffer, chunkSize: number): Buffer[] {
 
 	return string
 		.toString("hex")
-		.match(new RegExp(".{1,${chunkSize}}", "g"))
+		.match(new RegExp(`.{1,${chunkSize}}`, "g"))
 		.map((chunk) => Buffer.from(chunk, "hex"));
 }
