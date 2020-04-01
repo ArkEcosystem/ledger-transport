@@ -202,17 +202,17 @@ export default class ARK implements Transport {
 			this.CHUNK_SIZE * 2 - (2 + bip32Path.length * 4) * 2
 		);
 
-		chunks.forEach(function (chunk, index) {
+		for (const index in chunks) {
 			const buffer = Buffer.alloc(
-				index.toString() === "0" ? 1 + bip32Path.length * 4 : 0
+				index === "0" ? 1 + bip32Path.length * 4 : 0
 			);
 
-			if (index.toString() === "0") {
+			if (index === "0") {
 				writeBip32ElementsToBuffer(bip32Path, buffer);
 			}
 
-			toSend.push(Buffer.concat([buffer, chunk]));
-		});
+			toSend.push(Buffer.concat([buffer, chunks[index]]));
+		}
 
 		const promises = [];
 

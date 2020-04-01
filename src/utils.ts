@@ -46,9 +46,9 @@ export function writeBip32ElementsToBuffer(
 
 	buffer[0] = elements.length;
 
-	elements.forEach(function (element, index) {
-		buffer.writeUInt32BE(element, 1 + 4 * index);
-	});
+	for (const index in elements) {
+		buffer.writeUInt32BE(elements[index], 1 + 4 * parseInt(index, 10));
+	}
 }
 
 /**
