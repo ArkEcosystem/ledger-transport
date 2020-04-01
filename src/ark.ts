@@ -87,20 +87,32 @@ export default class ARK implements Transport {
 	readonly PAYLOAD_MAX: number = this.CHUNK_MAX * this.CHUNK_SIZE;
 
 	/**
-	 * ARK Ledger Transport Class Ctor.
+	 * Create an instance using a 'LedgerTransport' object.
+	 *
+	 * 'decorateAppAPIMethods' basically "locks" the instance,
+	 * preventing race conditions where parallel calls are made
+	 * or where multiple instantiations are attempted.
+	 *
+	 * @param {LedgerTransport} transport generic transport interface for Ledger HW.
+	 * @throws {Error} if 'LedgerTransport' is busy with another instruction.
 	 */
 	constructor(transport: LedgerTransport<any>) {
 		this.transport = transport;
 
-		this.transport.decorateAppAPIMethods(
-			this,
-			[
-				"getAddress",
-				"signTransaction",
-				"getAppConfiguration"
-			],
-			"w0w"
-		);
+		try {
+			this.transport.decorateAppAPIMethods(
+				this,
+				[
+					"getAddress",
+					"getAppConfiguration",
+					"signMessage",
+					"signTransaction"
+				],
+				"w0w"
+			);
+		  } catch (error) {
+			throw new Error(error);
+		  }
 	}
 
 	/**
