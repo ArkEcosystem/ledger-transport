@@ -10,7 +10,7 @@
 
 ## Build
 
-```
+```shell
 yarn && yarn build
 ```
 
