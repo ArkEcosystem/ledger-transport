@@ -40,7 +40,8 @@ import {
  * - P1_LAST:    Nth where N > 1
  *
  * P2:
- * - P2_ECDSA: Use Ecdsa Signatures
+ * - P2_ECDSA:        Use Ecdsa Signatures
+ * - P2_SCHNORR_LEG:  Use Schnorr (bcrypto-v4.1.0) Signatures
  *
  */
 enum ApduFlags {
@@ -67,6 +68,7 @@ enum ApduFlags {
 	P1_LAST = 0x81,
 
 	P2_ECDSA = 0x40,
+	P2_SCHNORR_LEG = 0x50,
 }
 
 /**
@@ -106,7 +108,9 @@ export default class ARK implements Transport {
 					"getAddress",
 					"getAppConfiguration",
 					"signMessage",
-					"signTransaction"
+					"signMessageWithSchnorr",
+					"signTransaction",
+					"signTransactionWithSchnorr"
 				],
 				"w0w"
 			);
@@ -154,25 +158,73 @@ export default class ARK implements Transport {
 	}
 
 	/**
-	 * Sign a Transaction using a Ledger Device.
+	 * Sign a Transaction with a Ledger Device using Ecdsa Signatures.
 	 *
 	 * @param {string} path Bip32 Path string
 	 * @param {Buffer} hex transaction payload hex
-	 * @returns {Promise<string>} payload signature
+	 * @returns {Promise<string>} payload ecdsa signature
 	 */
 	public async signTransaction(path: string, hex: Buffer): Promise<string> {
-		return this.sign(path, hex, ApduFlags.INS_SIGN_TRANSACTION);
+		return this.sign(
+			path,
+			hex,
+			ApduFlags.INS_SIGN_TRANSACTION,
+			ApduFlags.P2_ECDSA
+		);
 	}
 
 	/**
-	 * Sign a Message using a Ledger Device.
+	 * Sign a Transaction with a Ledger Device using Schnorr Signatures.
 	 *
 	 * @param {string} path Bip32 Path string
 	 * @param {Buffer} hex transaction payload hex
-	 * @returns {Promise<string>} payload signature
+	 * @returns {Promise<string>} payload schnorr signature
+	 */
+	public async signTransactionWithSchnorr(
+		path: string,
+		hex: Buffer
+	): Promise<string> {
+		return this.sign(
+			path,
+			hex,
+			ApduFlags.INS_SIGN_TRANSACTION,
+			ApduFlags.P2_SCHNORR_LEG
+		);
+	}
+
+	/**
+	 * Sign a Message with a Ledger Device using Ecdsa Signatures.
+	 *
+	 * @param {string} path Bip32 Path string
+	 * @param {Buffer} hex transaction payload hex
+	 * @returns {Promise<string>} payload ecdsa signature
 	 */
 	public async signMessage(path: string, hex: Buffer): Promise<string> {
-		return this.sign(path, hex, ApduFlags.INS_SIGN_MESSAGE);
+		return this.sign(
+			path,
+			hex,
+			ApduFlags.INS_SIGN_MESSAGE,
+			ApduFlags.P2_ECDSA
+		);
+	}
+
+	/**
+	 * Sign a Message with a Ledger Device using Schnorr Signatures.
+	 *
+	 * @param {string} path Bip32 Path string
+	 * @param {Buffer} hex transaction payload hex
+	 * @returns {Promise<string>} payload schnorr signature
+	 */
+	public async signMessageWithSchnorr(
+		path: string,
+		hex: Buffer
+	): Promise<string> {
+		return this.sign(
+			path,
+			hex,
+			ApduFlags.INS_SIGN_MESSAGE,
+			ApduFlags.P2_SCHNORR_LEG
+		);
 	}
 
 	/**
@@ -181,16 +233,23 @@ export default class ARK implements Transport {
 	 * @param {string} path Bip32 Path string
 	 * @param {Buffer} hex transaction payload hex
 	 * @param {number} instruction type of operation (e.g. Transaction, Message, etc.)
+	 * @param {number} signingAlgorithm type of signatures to use
 	 * @returns {Promise<string>} payload signature
 	 * @throws {Error} if the buffer length is 0 or greater than PAYLOAD_MAX
 	 */
 	private async sign(
 		path: string,
 		hex: Buffer,
-		instruction: number
+		instruction: number,
+		signingAlgorithm: number,
 	): Promise<string> {
 		if (hex.length === 0 || hex.length > this.PAYLOAD_MAX) {
 			throw new Error("Invalid Payload Size");
+		}
+
+		if (signingAlgorithm !== ApduFlags.P2_ECDSA &&
+			signingAlgorithm !== ApduFlags.P2_SCHNORR_LEG) {
+			throw new Error("Invalid Signing Algorithm");
 		}
 
 		const toSend = [];
@@ -233,15 +292,13 @@ export default class ARK implements Transport {
 				p1 = ApduFlags.P1_LAST;
 			}
 
-			const p2 = ApduFlags.P2_ECDSA;
-
 			/** send the Apdu chunk */
 			promises.push(
 				await this.transport.send(
 					ApduFlags.CLA,
 					instruction,
 					p1,
-					p2,
+					signingAlgorithm,
 					chunk
 				)
 			);
