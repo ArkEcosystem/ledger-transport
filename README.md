@@ -1,5 +1,9 @@
 # Ledger Transport
 
+<p align="center">
+    <img src="./banner.png" />
+</p>
+
 [![License: MIT](https://badgen.now.sh/badge/license/MIT/green)](https://opensource.org/licenses/MIT)
 
 > Lead Maintainer: [Alex Barnsley](https://github.com/alexbarnsley)
