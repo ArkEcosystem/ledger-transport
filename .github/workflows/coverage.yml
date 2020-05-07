@@ -1,4 +1,4 @@
-name: Lint & Test
+name: Coverage
 
 on:
     push:
@@ -9,7 +9,7 @@ on:
         types: [ready_for_review, synchronize, opened]
 
 jobs:
-    lint:
+    coverage:
         runs-on: ubuntu-latest
 
         strategy:
@@ -33,39 +33,6 @@ jobs:
 
             - name: Install
               run: yarn install
-
-            - name: Lint Source
-              run: yarn lint
-
-    test:
-        needs: lint
-
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                node-version: [12.x]
-
-        steps:
-            - uses: actions/checkout@v2
-
-            - name: Cache node modules
-              uses: actions/cache@v1
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: ${{ runner.os }}-node-
-
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node-version }}
-
-            - name: Install
-              run: yarn install
-
-            - name: Build
-              run: yarn build
 
             - name: Test
               run: yarn test --coverage
