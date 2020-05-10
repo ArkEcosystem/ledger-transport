@@ -54,6 +54,16 @@ describe("ARKTransport", () => {
         });
     });
 
+    describe("signMessageWithSchnorr", () => {
+        it("should pass with a schnorr signature", async () => {
+            const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.message.schnorr.record));
+            const message = Buffer.from(Fixtures.message.schnorr.payload, "hex");
+            await expect(ark.signMessageWithSchnorr(Fixtures.bip44.path.valid, message)).resolves.toEqual(
+                Fixtures.message.schnorr.result,
+            );
+        });
+    });
+
     describe("signTransaction", () => {
         it("should pass with an ecdsa signature", async () => {
             const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.transaction.ecdsa.record));
@@ -62,11 +72,13 @@ describe("ARKTransport", () => {
                 Fixtures.transaction.ecdsa.result,
             );
         });
+    });
 
-        it("should pass with an ecdsa signature for a large transaction", async () => {
+    describe("signTransactionWithSchnorr", () => {
+        it("should pass with a schnorr signature", async () => {
             const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.transaction.large.record));
             const transaction = Buffer.from(Fixtures.transaction.large.payload, "hex");
-            await expect(ark.signTransaction(Fixtures.bip44.path.valid, transaction)).resolves.toEqual(
+            await expect(ark.signTransactionWithSchnorr(Fixtures.bip44.path.valid, transaction)).resolves.toEqual(
                 Fixtures.transaction.large.result,
             );
         });
