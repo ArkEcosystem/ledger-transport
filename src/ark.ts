@@ -19,7 +19,14 @@ export class ARK implements LedgerTransport {
         this.transport = transport;
         this.transport.decorateAppAPIMethods(
             this,
-            ["getVersion", "getPublicKey", "signMessage", "signTransaction"],
+            [
+                "getVersion",
+                "getPublicKey",
+                "signMessage",
+                "signMessageWithSchnorr",
+                "signTransaction",
+                "signTransactionWithSchnorr",
+            ],
             "w0w",
         );
     }
@@ -59,18 +66,14 @@ export class ARK implements LedgerTransport {
     }
 
     /**
-     * Sign a Message using a Ledger Device.
+     * Sign a Message using a Ledger Device with Ecdsa Signatures.
      *
      * @param {string} path bip44 path as a string
      * @param {Buffer} message message payload
-     * @throws {ARKTransportMessageAsciiError} if the message contains non-ascii characters
-     * @returns {Promise<string>} payload signature
+     * @returns {Promise<string>} payload ecdsa signature
      */
     public async signMessage(path: string, message: Buffer): Promise<string> {
-        const REGEXP_INVALID_MESSAGE: string = "[^\x00-\x7F]";
-        if (message.toString().match(new RegExp(REGEXP_INVALID_MESSAGE, "g"))) {
-            throw new TransportErrors.MessageAsciiError();
-        }
+        this.checkMessageFormat(message);
 
         const response = await new Apdu.Builder(
             Apdu.Flag.CLA,
@@ -84,11 +87,32 @@ export class ARK implements LedgerTransport {
     }
 
     /**
-     * Sign a Transaction using a Ledger Device.
+     * Sign a Message using a Ledger Device with Schnorr Signatures.
+     *
+     * @param {string} path bip44 path as a string
+     * @param {Buffer} message message payload
+     * @returns {Promise<string>} payload schnorr signature
+     */
+    public async signMessageWithSchnorr(path: string, message: Buffer): Promise<string> {
+        this.checkMessageFormat(message);
+
+        const response = await new Apdu.Builder(
+            Apdu.Flag.CLA,
+            Apdu.Flag.INS_SIGN_MESSAGE,
+            Apdu.Flag.P1_SINGLE,
+            Apdu.Flag.P2_SCHNORR_LEG,
+            Buffer.concat([Bip44.Path.fromString(path).toBytes(), message]),
+        ).send(this.transport);
+
+        return response.toString("hex");
+    }
+
+    /**
+     * Sign a Transaction using a Ledger Device with Ecdsa Signatures.
      *
      * @param {string} path bip44 path as a string
      * @param {Buffer} payload transaction bytes
-     * @returns {Promise<string>} payload signature
+     * @returns {Promise<string>} payload ecdsa signature
      */
     public async signTransaction(path: string, payload: Buffer): Promise<string> {
         const response = await new Apdu.Builder(
@@ -100,5 +124,37 @@ export class ARK implements LedgerTransport {
         ).send(this.transport);
 
         return response.toString("hex");
+    }
+
+    /**
+     * Sign a Transaction using a Ledger Device with Schnorr Signatures.
+     *
+     * @param {string} path bip44 path as a string
+     * @param {Buffer} payload transaction bytes
+     * @returns {Promise<string>} payload schnorr signature
+     */
+    public async signTransactionWithSchnorr(path: string, payload: Buffer): Promise<string> {
+        const response = await new Apdu.Builder(
+            Apdu.Flag.CLA,
+            Apdu.Flag.INS_SIGN_TRANSACTION,
+            Apdu.Flag.P1_SINGLE,
+            Apdu.Flag.P2_SCHNORR_LEG,
+            Buffer.concat([Bip44.Path.fromString(path).toBytes(), payload]),
+        ).send(this.transport);
+
+        return response.toString("hex");
+    }
+
+    /**
+     * Check the formatting of a message.
+     *
+     * @param {Buffer} message message payload
+     * @throws {MessageAsciiError} if the message contains non-ascii characters
+     */
+    private checkMessageFormat(message: Buffer) {
+        const REGEXP_INVALID_MESSAGE: string = "[^\x00-\x7F]";
+        if (message.toString().match(new RegExp(REGEXP_INVALID_MESSAGE, "g"))) {
+            throw new TransportErrors.MessageAsciiError();
+        }
     }
 }
