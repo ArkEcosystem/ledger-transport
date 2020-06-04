@@ -5,12 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2020-06-04
 
 ### Changed
 
 -   improve implementation & maintainability ([#33])
 -   improve naming and comments ([#28])
+
+### Added
+
+-   support for schnorr signatures ([#30])
 
 ## [1.0.5] - 2020-02-27
 
@@ -59,4 +63,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [1.0.5]: https://github.com/ArkEcosystem/ledger-transport/compare/d6ccab2697891db6472355d1ff2d76bbc89e6e08...cf7d9a6679b4db74c07c50155549882f1737b87e
 [#28]: https://github.com/ArkEcosystem/ledger-transport/pull/28
 [#33]: https://github.com/ArkEcosystem/ledger-transport/pull/33
-[unreleased]: https://github.com/ArkEcosystem/ledger-transport/compare/cf7d9a6679b4db74c07c50155549882f1737b87e...develop
+[#30]: https://github.com/ArkEcosystem/ledger-transport/pull/33
+[1.1.1]: https://github.com/ArkEcosystem/ledger-transport/compare/cf7d9a6679b4db74c07c50155549882f1737b87e...1.1.1
