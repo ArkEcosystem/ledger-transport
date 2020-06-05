@@ -1,6 +1,6 @@
 {
     "name": "@arkecosystem/ledger-transport",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "A Ledger Hardware Wallet Interface in TypeScript for the ARK Blockchain.",
     "license": "MIT",
     "contributors": [
@@ -33,7 +33,7 @@
         "build": "yarn clean && tsc",
         "build:watch": "yarn clean && yarn compile -w",
         "build:docs": "./node_modules/typedoc/bin/typedoc --out docs src",
-        "clean": "rm -rf dist",
+        "clean": "del dist",
         "compile": "./node_modules/typescript/bin/tsc",
         "test": "jest --runInBand --detectOpenHandles --forceExit",
         "test:clean": "jest --clearCache",
@@ -43,7 +43,8 @@
         "lint": "./node_modules/eslint/bin/eslint.js src --ext .ts --fix",
         "lint:tests": "./node_modules/eslint/bin/eslint.js __tests__/**/*.ts --fix",
         "prettier": "prettier --write \"./*.{ts,js,json,md}\" \"./src/**/*.{ts,js,json,md}\" \"./__tests__/**/*.{ts,js,json,md}\"",
-        "format": "yarn lint && yarn prettier"
+        "format": "yarn lint && yarn prettier",
+        "prepublishOnly": "yarn build"
     },
     "devDependencies": {
         "@ledgerhq/hw-transport": "^5.7.0",
@@ -54,6 +55,7 @@
         "@typescript-eslint/eslint-plugin": "^2.27.0",
         "@typescript-eslint/parser": "^2.27.0",
         "codecov": "^3.6.5",
+        "del-cli": "^3.0.1",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.10.1",
         "eslint-plugin-jest": "^23.8.2",
