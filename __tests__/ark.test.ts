@@ -34,6 +34,11 @@ describe("ARKTransport", () => {
             const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.publicKey.record));
             await expect(ark.getPublicKey(Fixtures.bip44.path.valid)).resolves.toEqual(Fixtures.publicKey.result);
         });
+
+        it("should pass with a compressed publicKey for ark ledger app <= 2.0.1", async () => {
+            const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.publicKey.legacy.record));
+            await expect(ark.getPublicKey(Fixtures.bip44.path.valid)).resolves.toEqual(Fixtures.publicKey.result);
+        });
     });
 
     describe("signMessage", () => {
