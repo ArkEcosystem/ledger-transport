@@ -60,7 +60,12 @@ export class ARK implements LedgerTransport {
             Apdu.Flag.P1_NON_CONFIRM,
             Apdu.Flag.P2_NO_CHAINCODE,
             Bip44.Path.fromString(path).toBytes(),
-        ).send(this.transport);
+        )
+            .send(this.transport)
+            .catch(async () => {
+                // support ARK App <= 2.0.1
+                return await this.getPublicKeyLegacy(path);
+            });
 
         return response.slice(1, 1 + response[0]).toString("hex");
     }
@@ -156,5 +161,21 @@ export class ARK implements LedgerTransport {
         if (message.toString().match(new RegExp(REGEXP_INVALID_MESSAGE, "g"))) {
             throw new TransportErrors.MessageAsciiError();
         }
+    }
+
+    /**
+     * Get the PublicKey from a Ledger Device using ARK App <= 2.0.1.
+     *
+     * @param {string} path bip44 path as a string
+     * @returns {Promise<Buffer>} full apdu response
+     */
+    private async getPublicKeyLegacy(path: string): Promise<Buffer> {
+        return await new Apdu.Builder(
+            Apdu.Flag.CLA,
+            Apdu.Flag.INS_GET_PUBLIC_KEY,
+            Apdu.Flag.P1_NON_CONFIRM,
+            Apdu.Flag.P2_ECDSA,
+            Bip44.Path.fromString(path).toBytes(),
+        ).send(this.transport);
     }
 }

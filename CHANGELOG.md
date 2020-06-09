@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2020-06-09
+
+### Added
+
+-   add support for 2.0.1 ARK App
+
 ## [1.1.1] - 2020-06-05
 
 ### Changed
@@ -70,4 +76,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [#28]: https://github.com/ArkEcosystem/ledger-transport/pull/28
 [#33]: https://github.com/ArkEcosystem/ledger-transport/pull/33
 [#30]: https://github.com/ArkEcosystem/ledger-transport/pull/33
-[1.1.1]: https://github.com/ArkEcosystem/ledger-transport/compare/cf7d9a6679b4db74c07c50155549882f1737b87e...1.1.1
+[1.1.0]: https://github.com/ArkEcosystem/ledger-transport/compare/cf7d9a6679b4db74c07c50155549882f1737b87e...4ead4c126f6b92ad7539c9c23bfa52651e82c577
+[1.1.1]: https://github.com/ArkEcosystem/ledger-transport/compare/4ead4c126f6b92ad7539c9c23bfa52651e82c577...518e599166afc96cb4f2088158ad316d810d7b77
+[1.1.2]: https://github.com/ArkEcosystem/ledger-transport/compare/518e599166afc96cb4f2088158ad316d810d7b77...1.1.2
