@@ -47,7 +47,7 @@
         "prepublishOnly": "yarn build"
     },
     "devDependencies": {
-        "@ledgerhq/hw-transport-mocker": "^5.19.1",
+        "@ledgerhq/hw-transport-mocker": "^5.34.0",
         "@sindresorhus/tsconfig": "sindresorhus/tsconfig",
         "@types/jest": "^25.2.1",
         "@types/node": "^13.5.0",
@@ -70,7 +70,7 @@
         "typescript-eslint": "^0.0.1-alpha.0"
     },
     "dependencies": {
-        "@ledgerhq/errors": "^5.19.1",
-        "@ledgerhq/hw-transport": "^5.19.1"
+        "@ledgerhq/errors": "^5.34.0",
+        "@ledgerhq/hw-transport": "^5.34.0"
     }
 }
