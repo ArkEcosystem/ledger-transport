@@ -67,7 +67,7 @@ export class ARK implements LedgerTransport {
                 return await this.getPublicKeyLegacy(path);
             });
 
-        return response.slice(1, 1 + response[0]).toString("hex");
+        return response.slice(1, response.length).toString("hex");
     }
 
     /**
