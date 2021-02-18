@@ -36,7 +36,6 @@ import * as TransportErrors from "./errors";
  * - P1_LAST:    Nth where N > 1
  *
  * P2:
- * - P2_ECDSA: Use Ecdsa Signatures
  * - P2_SCHNORR_LEG: Use Schnorr (bcrypto-v4.1.0) Signatures
  *
  */
@@ -63,7 +62,6 @@ export enum ApduFlag {
     P1_MORE = 0x01,
     P1_LAST = 0x81,
 
-    P2_ECDSA = 0x40,
     P2_SCHNORR_LEG = 0x50,
 }
 
