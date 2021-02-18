@@ -60,7 +60,7 @@ export class ARK implements LedgerTransport {
             Bip44.Path.fromString(path).toBytes(),
         ).send(this.transport);
 
-        return response.slice(1, 1 + response[0]).toString("hex");
+        return response.slice(1, response.length).toString("hex");
     }
 
     /**
