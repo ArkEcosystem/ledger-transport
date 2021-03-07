@@ -7,6 +7,10 @@ export const Fixtures = {
         result: "2.0.1",
     },
     bip44: {
+        extended: {
+            path: "44'/111'/0'",
+            result: Buffer.from("038000002c8000006f80000000", "hex"),
+        },
         path: {
             invalid: "44'/11x'/0'/0/0",
             valid: "44'/111'/0'/0/0",
