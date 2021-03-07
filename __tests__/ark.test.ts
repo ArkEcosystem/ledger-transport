@@ -36,6 +36,15 @@ describe("ARKTransport", () => {
         });
     });
 
+    describe("getExtPublicKey", () => {
+        it("should pass with an extended account publicKey and chaincode", async () => {
+            const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.publicKey.extended.record));
+            await expect(ark.getExtPublicKey(Fixtures.bip44.path.valid)).resolves.toEqual(
+                Fixtures.publicKey.extended.result,
+            );
+        });
+    });
+
     describe("signMessageWithSchnorr", () => {
         it("should pass with a schnorr signature", async () => {
             const ark = await TransportMock.getARKTransport(RecordStore.fromString(Fixtures.message.schnorr.record));
