@@ -7,6 +7,10 @@ export const Fixtures = {
         result: "2.0.1",
     },
     bip44: {
+        extended: {
+            path: "44'/111'/0'",
+            result: Buffer.from("038000002c8000006f80000000", "hex"),
+        },
         path: {
             invalid: "44'/11x'/0'/0/0",
             valid: "44'/111'/0'/0/0",
@@ -32,6 +36,14 @@ export const Fixtures = {
         invalid: "tëst",
     },
     publicKey: {
+        extended: {
+            record: `
+            => e002000115058000002c8000006f800000000000000000000000
+            <= 210214b1cd3dd4c955e269628127fa27d5bccc6bbfcf23dfa3add94b9292f355a84f8d6fcfb5d4a9dbfc1084915c390e86e9d66eb511a9046dece25a6a6b9fc899049000
+            `,
+            result:
+                "0214b1cd3dd4c955e269628127fa27d5bccc6bbfcf23dfa3add94b9292f355a84f8d6fcfb5d4a9dbfc1084915c390e86e9d66eb511a9046dece25a6a6b9fc89904",
+        },
         record: `
         => e002000015058000002c8000006f800000000000000000000000
         <= 210214b1cd3dd4c955e269628127fa27d5bccc6bbfcf23dfa3add94b9292f355a84f9000

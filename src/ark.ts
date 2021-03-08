@@ -19,12 +19,7 @@ export class ARK implements LedgerTransport {
         this.transport = transport;
         this.transport.decorateAppAPIMethods(
             this,
-            [
-                "getVersion",
-                "getPublicKey",
-                "signMessageWithSchnorr",
-                "signTransactionWithSchnorr",
-            ],
+            ["getVersion", "getPublicKey", "getExtPublicKey", "signMessageWithSchnorr", "signTransactionWithSchnorr"],
             "w0w",
         );
     }
@@ -57,6 +52,27 @@ export class ARK implements LedgerTransport {
             Apdu.Flag.INS_GET_PUBLIC_KEY,
             Apdu.Flag.P1_NON_CONFIRM,
             Apdu.Flag.P2_NO_CHAINCODE,
+            Bip44.Path.fromString(path).toBytes(),
+        ).send(this.transport);
+
+        return response.slice(1, response.length).toString("hex");
+    }
+
+    /**
+     * Get the Extended PublicKey from a Ledger Device using a Bip44 path-string.
+     *
+     * Used to derive a 'hardened' account key (eg 44'/111'/0'").
+     * Hex result is a 33-byte compressed publicKey prepending a 32-byte chainCode.
+     *
+     * @param {string} path bip44 path as a string
+     * @returns {Promise<string>} device extended publicKey & chaincode
+     */
+    public async getExtPublicKey(path: string): Promise<string> {
+        const response = await new Apdu.Builder(
+            Apdu.Flag.CLA,
+            Apdu.Flag.INS_GET_PUBLIC_KEY,
+            Apdu.Flag.P1_NON_CONFIRM,
+            Apdu.Flag.P2_CHAINCODE,
             Bip44.Path.fromString(path).toBytes(),
         ).send(this.transport);
 

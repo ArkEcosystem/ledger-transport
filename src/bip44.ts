@@ -15,11 +15,12 @@ import * as TransportErrors from "./errors";
  * https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  *
  * @example const bip44Bytes = Bip44Path.fromString("44'/111'/0'/0/0").toBytes()
+ * @example const bip44Bytes = Bip44Path.fromString("44'/111'/0'").toBytes()
  * @example const bip44Bytes = Bip44Path.fromString("m/44'/111'/0'/0/0").toBytes()
  */
 export class Bip44Path {
     private static readonly HARDENING: number = 0x80000000;
-    private static readonly REGEXP_VALID_BIP44: string = "^((m/)?(44'?)){1}(/[0-9]+'?){2}(/[0-9]+){2}$";
+    private static readonly REGEXP_VALID_BIP44: string = "^((m/)?(44'?))(/[0-9]+'?){2}((/[0-9]+){2})?$";
     private _elements: number[] = [];
 
     /**
