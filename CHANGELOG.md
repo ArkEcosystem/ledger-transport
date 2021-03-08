@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2021-03-08
+
+### Added
+
+-   Add ext key support (a70f6a79, @sleepdefic1t)
+
+### Changed
+
+-   Remove ecdsa support (843260bc, @sleepdefic1t)
+
 ## [1.1.3] - 2020-07-27
 
 ### Changed
